@@ -46,7 +46,7 @@ PostResponse.model_rebuild()
 # Vote Schemas
 class VoteCreate(BaseModel):
     """Schema for voting on posts"""
-    vote_type: str = Field(..., pattern="^(up|down)$")
+    vote_type: str = Field(..., regex="^(up|down)$")
 
 class VoteResponse(BaseModel):
     """Schema for vote response"""
