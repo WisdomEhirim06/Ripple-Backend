@@ -248,23 +248,36 @@ async def get_room_posts(
 async def create_post_endpoint(
     room_id: str,
     post_data: PostCreate,
-    session_data: dict = Depends(create_room_auth_dependency),
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     db: Session = Depends(get_db)
 ):
-    """Create a new post in a room"""
-    session_id = session_data["session_id"]
     
+    """Create a new post in a room"""
+    # Create and call the auth depednecy manually
+    auth_dependency = create_room_auth_dependency(room_id)
+    session_data = auth_dependency(request, credentials)
+    session_id = session_data["session_id"]
+
     # Check rate limit
     check_post_rate_limit(session_id)
     
     # Create post
-    post = create_post(db, room_id, session_id, post_data)
+
+    try:
+        post = create_post(db, room_id, session_id, post_data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error: {str(e)}"
+        )
     
     if not post:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Failed to create post"
         )
+    
     
     # Prepare response
     post_response = PostResponse(
