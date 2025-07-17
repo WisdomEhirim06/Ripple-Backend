@@ -1,6 +1,6 @@
 # Ripple Backend
 
-Ripple is a backend API for creating anonymous, temporary chat rooms where users can share thoughts freely and connect authentically. This service powers the Ripple frontend, enabling features like anonymous identities, mood detection, voting, and real-time messaging.
+Ripple is a backend API written with FastAPI for creating anonymous, temporary chat rooms where users can share thoughts freely and connect authentically. This service powers the Ripple frontend, enabling features like anonymous identities, mood detection, voting, and real-time messaging.
 
 ## Features
 
@@ -34,6 +34,7 @@ backend/
 ### Prerequisites
 
 - Python 3.12.7 (see [`runtime.txt`](runtime.txt))
+- FastAPI
 - PostgreSQL database
 - Redis server (optional, for WebSocket scaling)
 - [Poetry](https://python-poetry.org/) or `pip` for dependency management
