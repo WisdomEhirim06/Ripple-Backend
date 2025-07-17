@@ -129,16 +129,23 @@ def get_room_participant_count(db: Session, room_id: str) -> int:
 # Post CRUD operations
 def create_post(db: Session, room_id: str, session_id: str, post_data: PostCreate) -> Post:
     """Create a new post in a room"""
+
     participant = get_participant(db, room_id, session_id)
-    if not participant:
-        return None
     
+
+    if not participant:
+        # Auto-join the room using your existing join_room function
+        participant = join_room(db, room_id, session_id)
+        if not participant:
+            return None
+        
     # Validate parent post exists if specified
     if post_data.parent_id:
         parent_post = db.query(Post).filter(
             and_(Post.id == post_data.parent_id, Post.room_id == room_id)
         ).first()
         if not parent_post:
+            print(f"ERROR: Parent post {post_data.parent_id} not found")
             return None
     
     post = Post(
