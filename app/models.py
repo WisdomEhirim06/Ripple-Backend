@@ -34,7 +34,7 @@ class Room(Base):
         # Get remaining time in seconds
         if self.is_expired:
             return 0
-        return int((self.exxpires_at - datetime.utcnow()).total_seconds())
+        return int((self.expires_at - datetime.utcnow()).total_seconds())
     
 
 class Post(Base):
